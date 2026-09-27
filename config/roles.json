@@ -1,0 +1,112 @@
+{
+  "roles": [
+    {
+      "role_id": "R001",
+      "name": "Branch Manager",
+      "department": "Management",
+      "max_transaction_limit": 2000000,
+      "can_modify_beneficiary": true,
+      "can_approve": true,
+      "can_override": true
+    },
+    {
+      "role_id": "R002",
+      "name": "Teller",
+      "department": "Operations",
+      "max_transaction_limit": 500000,
+      "can_modify_beneficiary": false,
+      "can_approve": false,
+      "can_override": false
+    },
+    {
+      "role_id": "R003",
+      "name": "Loan Officer",
+      "department": "Loans",
+      "max_transaction_limit": 1500000,
+      "can_modify_beneficiary": true,
+      "can_approve": true,
+      "can_override": false
+    },
+    {
+      "role_id": "R004",
+      "name": "Operations Officer",
+      "department": "Operations",
+      "max_transaction_limit": 1000000,
+      "can_modify_beneficiary": true,
+      "can_approve": false,
+      "can_override": false
+    },
+    {
+      "role_id": "R005",
+      "name": "Relationship Manager",
+      "department": "Front Office",
+      "max_transaction_limit": 1200000,
+      "can_modify_beneficiary": true,
+      "can_approve": false,
+      "can_override": false
+    },
+    {
+      "role_id": "R006",
+      "name": "Compliance Officer",
+      "department": "Compliance",
+      "max_transaction_limit": 2000000,
+      "can_modify_beneficiary": false,
+      "can_approve": true,
+      "can_override": false
+    },
+    {
+      "role_id": "R007",
+      "name": "IT Admin",
+      "department": "IT",
+      "max_transaction_limit": 0,
+      "can_modify_beneficiary": false,
+      "can_approve": false,
+      "can_override": true
+    },
+    {
+      "role_id": "R008",
+      "name": "Cashier",
+      "department": "Operations",
+      "max_transaction_limit": 300000,
+      "can_modify_beneficiary": false,
+      "can_approve": false,
+      "can_override": false
+    },
+    {
+      "role_id": "R009",
+      "name": "Auditor",
+      "department": "Audit",
+      "max_transaction_limit": 0,
+      "can_modify_beneficiary": false,
+      "can_approve": false,
+      "can_override": false
+    },
+    {
+      "role_id": "R010",
+      "name": "Treasury Analyst",
+      "department": "Treasury",
+      "max_transaction_limit": 2500000,
+      "can_modify_beneficiary": true,
+      "can_approve": true,
+      "can_override": false
+    },
+    {
+      "role_id": "R011",
+      "name": "Customer Service Officer",
+      "department": "Customer Service",
+      "max_transaction_limit": 200000,
+      "can_modify_beneficiary": false,
+      "can_approve": false,
+      "can_override": false
+    },
+    {
+      "role_id": "R012",
+      "name": "Intern",
+      "department": "Various",
+      "max_transaction_limit": 50000,
+      "can_modify_beneficiary": false,
+      "can_approve": false,
+      "can_override": false
+    }
+  ]
+}

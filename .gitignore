@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+env/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Environment
+.env
+.env.local
+
+# Data (too big for GitHub — regenerate locally)
+data/raw/*.csv
+data/generated/*.csv
+data/generated/*.json
+data/ground_truth/*.csv
+
+# Keep folder structure
+!data/raw/.gitkeep
+!data/generated/.gitkeep
+!data/ground_truth/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
