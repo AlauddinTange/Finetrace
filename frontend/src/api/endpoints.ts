@@ -1,6 +1,20 @@
 import { apiClient } from './client';
-import { Alert, Case, Customer, DashboardStats, Employee, Transaction, Investigation } from '../types';
+import type {
+  Alert,
+  Case,
+  Customer,
+  DashboardStats,
+  Employee,
+  Transaction,
+  Investigation,
+} from '../types';
 
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+}
+
+/* ── Auth ── */
 export const login = async (
   username: string,
   password: string,
@@ -9,53 +23,65 @@ export const login = async (
   form.append('username', username);
   form.append('password', password);
 
-  const res = await client.post<LoginResponse>('/v1/auth/login', form, {
+  const res = await apiClient.post<LoginResponse>('/api/v1/auth/login', form, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
   return res.data;
 };
 
+/* ── Dashboard ── */
 export const getDashboard = async (): Promise<DashboardStats> => {
-  const response = await apiClient.get('/api/v1/dashboard/');
-  return response.data;
+  const res = await apiClient.get<DashboardStats>('/api/v1/dashboard/');
+  return res.data;
 };
 
+/* ── Alerts ── */
 export const getAlerts = async (): Promise<Alert[]> => {
-  const response = await apiClient.get('/api/v1/alerts/');
-  return response.data;
+  const res = await apiClient.get<Alert[]>('/api/v1/alerts/');
+  return res.data;
 };
 
-export const getAlert = async (id: string): Promise<Alert> => {
-  const response = await apiClient.get(`/api/v1/alerts/${id}`);
-  return response.data;
+export const getAlert = async (id: string | number): Promise<Alert> => {
+  const res = await apiClient.get<Alert>(`/api/v1/alerts/${id}`);
+  return res.data;
 };
 
+/* ── Cases ── */
 export const getCases = async (): Promise<Case[]> => {
-  const response = await apiClient.get('/api/v1/cases/');
-  return response.data;
+  const res = await apiClient.get<Case[]>('/api/v1/cases/');
+  return res.data;
 };
 
-export const updateCaseStatus = async (id: string, status: string): Promise<Case> => {
-  const response = await apiClient.patch(`/api/v1/cases/${id}`, { status });
-  return response.data;
+export const updateCase = async (
+  id: string | number,
+  data: Partial<Pick<Case, 'status' | 'assigned_to'>>,
+): Promise<Case> => {
+  const res = await apiClient.patch<Case>(`/api/v1/cases/${id}`, data);
+  return res.data;
 };
 
+/* ── Employees ── */
 export const getEmployees = async (): Promise<Employee[]> => {
-  const response = await apiClient.get('/api/v1/employees/');
-  return response.data;
+  const res = await apiClient.get<Employee[]>('/api/v1/employees/');
+  return res.data;
 };
 
-export const getTransactions = async (): Promise<Transaction[]> => {
-  const response = await apiClient.get('/api/v1/transactions/');
-  return response.data;
-};
-
+/* ── Customers ── */
 export const getCustomers = async (): Promise<Customer[]> => {
-  const response = await apiClient.get('/api/v1/customers/');
-  return response.data;
+  const res = await apiClient.get<Customer[]>('/api/v1/customers/');
+  return res.data;
 };
 
-export const getInvestigations = async (): Promise<Investigation[]> => {
-  const response = await apiClient.get('/api/v1/investigations/');
-  return response.data;
+/* ── Transactions ── */
+export const getTransactions = async (): Promise<Transaction[]> => {
+  const res = await apiClient.get<Transaction[]>('/api/v1/transactions/');
+  return res.data;
 };
+
+/* ── Investigations ── */
+export const getInvestigations = async (): Promise<Investigation[]> => {
+  const res = await apiClient.get<Investigation[]>('/api/v1/investigations/');
+  return res.data;
+};
+
+export const updateCaseStatus = updateCase;

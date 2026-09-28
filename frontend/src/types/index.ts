@@ -76,3 +76,8 @@ export interface Investigation {
   title: string;
   status: string;
 }
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+}
