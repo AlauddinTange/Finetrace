@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/insightx"
+    DATABASE_URL: str = "sqlite:///./insightx.db"
     SECRET_KEY: str = "super-secret-insight-x-jwt-key-2026"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60

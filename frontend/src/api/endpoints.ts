@@ -1,14 +1,18 @@
 import { apiClient } from './client';
 import { Alert, Case, Customer, DashboardStats, Employee, Transaction, Investigation } from '../types';
 
-export const login = async (username: string, password: string): Promise<{ access_token: string; token_type: string }> => {
-  const formData = new URLSearchParams();
-  formData.append('username', username);
-  formData.append('password', password);
-  const response = await apiClient.post('/api/v1/auth/login', formData, {
+export const login = async (
+  username: string,
+  password: string,
+): Promise<LoginResponse> => {
+  const form = new URLSearchParams();
+  form.append('username', username);
+  form.append('password', password);
+
+  const res = await client.post<LoginResponse>('/v1/auth/login', form, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
-  return response.data;
+  return res.data;
 };
 
 export const getDashboard = async (): Promise<DashboardStats> => {

@@ -107,4 +107,5 @@ export const Alerts: React.FC = () => {
       </main>
     </div>
   );
-};
+}; 
+export default Alerts; 

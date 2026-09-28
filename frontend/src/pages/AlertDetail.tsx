@@ -127,4 +127,5 @@ export const AlertDetail: React.FC = () => {
       </main>
     </div>
   );
-};
+}; 
+export default AlertDetail; 

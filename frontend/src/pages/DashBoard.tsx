@@ -163,4 +163,5 @@ export const Dashboard: React.FC = () => {
       </main>
     </div>
   );
-};
+}; 
+export default Dashboard; 

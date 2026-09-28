@@ -1,41 +1,29 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Login } from './pages/Login';
-import { Dashboard } from './pages/Dashboard';
-import { Alerts } from './pages/Alerts';
-import { AlertDetail } from './pages/AlertDetail';
-import { Cases } from './pages/Cases';
-import { Graph } from './pages/Graph';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Login        from './pages/Login';
+import Dashboard    from './pages/Dashboard';
+import Alerts       from './pages/Alerts';
+import AlertDetail  from './pages/AlertDetail';
+import Cases        from './pages/Cases';
+import Graph        from './pages/Graph';
+import Benchmark    from './pages/Benchmark';
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const token = localStorage.getItem('access_token');
-  if (!token) {
-    return <Navigate replace to="/login" />;
-  }
-  return <>{children}</>;
+  return token ? children : <Navigate to="/login" replace />;
 };
 
-const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
-  <div className="min-h-screen bg-bg-primary flex flex-col">
-    <div className="p-6 max-w-7xl mx-auto w-full text-text-primary text-xl font-bold">{title} View (Active)</div>
-  </div>
-);
-
-export const App: React.FC = () => {
+export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
-        <Route path="/alerts/:id" element={<ProtectedRoute><AlertDetail /></ProtectedRoute>} />
-        <Route path="/cases" element={<ProtectedRoute><Cases /></ProtectedRoute>} />
-        <Route path="/graph" element={<ProtectedRoute><Graph /></ProtectedRoute>} />
-        <Route path="/benchmark" element={<ProtectedRoute><PlaceholderPage title="Model Benchmark & Evaluation" /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate replace to="/dashboard" />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard"    element={<RequireAuth><Dashboard /></RequireAuth>} />
+      <Route path="/alerts"       element={<RequireAuth><Alerts /></RequireAuth>} />
+      <Route path="/alerts/:id"   element={<RequireAuth><AlertDetail /></RequireAuth>} />
+      <Route path="/cases"        element={<RequireAuth><Cases /></RequireAuth>} />
+      <Route path="/graph"        element={<RequireAuth><Graph /></RequireAuth>} />
+      <Route path="/benchmark"    element={<RequireAuth><Benchmark /></RequireAuth>} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   );
-};
-
-export default App;
+}
