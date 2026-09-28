@@ -1,6 +1,6 @@
 """
-Risk Fusion — merges all signals into unified alerts.
-Skips empty detector outputs gracefully.
+Risk Fusion — merges signals into unified alerts.
+Fixed: counterfactual uses clipped score (not raw total) + wider tiers.
 """
 import pandas as pd
 from pathlib import Path
@@ -10,18 +10,15 @@ GEN = ROOT / "data" / "generated"
 
 
 def tier(score):
-    if score >= 85: return "CRITICAL"
-    if score >= 60: return "HIGH"
-    if score >= 30: return "MEDIUM"
+    if score >= 90: return "CRITICAL"
+    if score >= 70: return "HIGH"
+    if score >= 40: return "MEDIUM"
     return "LOW"
 
 
-def _safe_read(p: Path) -> pd.DataFrame:
-    """Read a CSV, return empty df if missing or empty."""
-    if not p.exists():
-        return pd.DataFrame()
-    if p.stat().st_size < 10:  # effectively empty
-        return pd.DataFrame()
+def _safe_read(p):
+    if not p.exists(): return pd.DataFrame()
+    if p.stat().st_size < 10: return pd.DataFrame()
     try:
         return pd.read_csv(p)
     except Exception:
@@ -43,10 +40,9 @@ def fuse():
             print(f"   loaded {f}: {len(df)} rows")
             frames.append(df)
         else:
-            print(f"   skipped {f}: empty or missing")
+            print(f"   skipped {f}: empty")
 
     if not frames:
-        print("No signal files found.")
         return pd.DataFrame()
 
     all_signals = pd.concat(frames, ignore_index=True)
@@ -59,20 +55,19 @@ def fuse():
         )),
     ).reset_index()
 
-    grouped["risk_score"] = grouped["total_score"].clip(upper=100)
+    grouped["risk_score"] = grouped["total_score"].clip(upper=98)
     grouped["risk_level"] = grouped["risk_score"].apply(tier)
     grouped["signal_count"] = grouped["signals"].apply(len)
     grouped["explanation"] = grouped.apply(
-        lambda r: f"{r['signal_count']} signal(s): " + ", ".join(r["signals"]),
-        axis=1
+        lambda r: f"{r['signal_count']} signal(s): " + ", ".join(r["signals"]), axis=1
     )
     grouped["alert_id"] = ["ALERT-" + str(i + 1).zfill(4) for i in range(len(grouped))]
 
     def counterfactual(row):
         if row["signal_count"] <= 1:
             return "Single-signal alert — removing it drops risk to LOW."
-        per = row["total_score"] / row["signal_count"]
-        return f"Removing any 1 signal drops score by ~{per:.0f} points."
+        per = row["risk_score"] / row["signal_count"]
+        return f"Removing any 1 signal drops risk score by ~{per:.0f} points."
     grouped["counterfactual"] = grouped.apply(counterfactual, axis=1)
 
     out = grouped[["alert_id", "entity_type", "entity_id", "risk_level",
@@ -91,4 +86,4 @@ if __name__ == "__main__":
     out = fuse()
     print(f"\n[FUSION] Total unified alerts: {len(out)}")
     if len(out):
-        print(out[["alert_id", "entity_type", "entity_id", "risk_level", "signal_count"]].head(15).to_string())
+        print(out["risk_level"].value_counts().to_string())
