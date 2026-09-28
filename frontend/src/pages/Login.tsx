@@ -19,8 +19,9 @@ export const Login: React.FC = () => {
       localStorage.setItem('access_token', data.access_token);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Invalid credentials. Please try again.');
-    } finally {
+  console.error('LOGIN ERROR:', err);
+  setError(err.response?.data?.detail || 'Invalid credentials. Please try again.');
+} finally {
       setLoading(false);
     }
   };
