@@ -2,8 +2,6 @@
 
 **Financial Crime & Insider Risk Intelligence Platform**
 
-HACKMATRIX 5.0 · PCCOE Pune · Team FinAutomata
-
 ---
 
 ## What It Is
