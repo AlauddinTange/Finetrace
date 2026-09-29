@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api import auth, employees, customers, accounts, transactions, alerts, investigations, cases, dashboard
-
+from app.api import auth, employees, customers, accounts, transactions, alerts, investigations, cases, dashboard, ai_stats
 app = FastAPI(
     title="INSIGHT-X: Financial Crime & Insider Risk Intelligence Platform",
     version="1.0.0",
@@ -27,6 +26,7 @@ app.include_router(alerts.router, prefix="/api/v1/alerts", tags=["Alerts"])
 app.include_router(investigations.router, prefix="/api/v1/investigations", tags=["Investigations"])
 app.include_router(cases.router, prefix="/api/v1/cases", tags=["Cases"])
 app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
+app.include_router(ai_stats.router, prefix="/api/v1/ai-stats", tags=["AI Stats"])
 
 @app.get("/")
 def read_root():

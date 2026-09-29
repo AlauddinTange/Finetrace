@@ -88,8 +88,8 @@ export const updateCaseStatus = updateCase;
 
 export const explainAlert = async (
   id: string | number,
-): Promise<{ alert_id: string; explanation: string }> => {
-  const res = await apiClient.post<{ alert_id: string; explanation: string }>(
+): Promise<{ alert_id: string; explanation: string; verified: boolean }> => {
+  const res = await apiClient.post<{ alert_id: string; explanation: string; verified: boolean }>(
     `/api/v1/alerts/${id}/explain`,
   );
   return res.data;
