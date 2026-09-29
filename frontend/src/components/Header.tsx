@@ -1,6 +1,16 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShieldAlert, LayoutDashboard, AlertTriangle, FolderKanban, Network, BarChart2, LogOut, User } from 'lucide-react';
+import {
+  ShieldAlert,
+  LayoutDashboard,
+  AlertTriangle,
+  FolderKanban,
+  Network,
+  BarChart2,
+  LogOut,
+  User,
+  Cpu,
+} from 'lucide-react';
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -17,16 +27,22 @@ export const Header: React.FC = () => {
     { path: '/cases', label: 'Cases', icon: FolderKanban },
     { path: '/graph', label: 'Graph', icon: Network },
     { path: '/benchmark', label: 'Benchmark', icon: BarChart2 },
+    { path: '/ai-stack', label: 'AI Stack', icon: Cpu },
   ];
 
   return (
     <header className="bg-bg-card border-b border-border sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between">
       <div className="flex items-center gap-8">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/dashboard')}>
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => navigate('/dashboard')}
+        >
           <div className="p-2 bg-accent-red/10 border border-accent-red/30 rounded-lg text-accent-red shadow-[0_0_10px_rgba(255,77,109,0.2)]">
             <ShieldAlert size={22} />
           </div>
-          <span className="font-bold text-lg tracking-wider text-text-primary">FIN<span className="text-accent-red">TRACE</span></span>
+          <span className="font-bold text-lg tracking-wider text-text-primary">
+            FIN<span className="text-accent-red">TRACE</span>
+          </span>
         </div>
 
         <nav className="hidden md:flex items-center gap-1">
@@ -56,7 +72,9 @@ export const Header: React.FC = () => {
           <div className="w-7 h-7 rounded-full bg-accent-cyan/20 border border-accent-cyan/40 flex items-center justify-center text-accent-cyan text-xs font-bold">
             <User size={14} />
           </div>
-          <span className="text-xs font-medium text-text-primary hidden sm:inline">Investigator</span>
+          <span className="text-xs font-medium text-text-primary hidden sm:inline">
+            Investigator
+          </span>
         </div>
         <button
           onClick={handleLogout}
@@ -69,5 +87,5 @@ export const Header: React.FC = () => {
     </header>
   );
 };
- 
-export default Header; 
+
+export default Header;

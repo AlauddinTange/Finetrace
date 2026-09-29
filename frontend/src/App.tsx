@@ -6,6 +6,7 @@ import AlertDetail  from './pages/AlertDetail';
 import Cases        from './pages/Cases';
 import Graph        from './pages/Graph';
 import Benchmark    from './pages/Benchmark';
+import AIStack      from './pages/AIStack';
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const token = localStorage.getItem('access_token');
@@ -22,8 +23,9 @@ export default function App() {
       <Route path="/cases"        element={<RequireAuth><Cases /></RequireAuth>} />
       <Route path="/graph"        element={<RequireAuth><Graph /></RequireAuth>} />
       <Route path="/benchmark"    element={<RequireAuth><Benchmark /></RequireAuth>} />
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/ai-stack"     element={<RequireAuth><AIStack /></RequireAuth>} />
+      <Route path="/"             element={<Navigate to="/dashboard" replace />} />
+      <Route path="*"             element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }
