@@ -79,6 +79,7 @@ def get_alert(alert_id: str):
 @router.post("/{alert_id}/explain")
 def explain_alert(alert_id: str):
     from app.services.llm_service import generate_explanation
+    from app.services.llm_verify import verify_explanation
 
     df = _load()
     if df.empty:
@@ -95,4 +96,10 @@ def explain_alert(alert_id: str):
         raise HTTPException(status_code=404, detail="Alert not found")
 
     explanation = generate_explanation(target)
-    return {"alert_id": target["alert_code"], "explanation": explanation}
+    is_valid, _ = verify_explanation(explanation, target)
+
+    return {
+        "alert_id": target["alert_code"],
+        "explanation": explanation,
+        "verified": is_valid,
+    }

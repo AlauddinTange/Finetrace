@@ -4,7 +4,7 @@ Generates evidence-grounded, unique explanations per alert.
 """
 import httpx
 from typing import Optional
-
+from app.services.llm_verify import verify_explanation, fallback_explanation
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 MODEL = "qwen2.5-coder:7b"
 TIMEOUT = 90
@@ -74,23 +74,40 @@ RULES:
 
 def generate_explanation(alert: dict) -> str:
     prompt = _build_prompt(alert)
-    payload = {
-        "model": MODEL,
-        "prompt": prompt,
-        "stream": False,
-        "options": {"temperature": 0.4, "num_predict": 250, "top_p": 0.9},
-    }
 
-    try:
-        with httpx.Client(timeout=TIMEOUT) as client:
-            r = client.post(OLLAMA_URL, json=payload)
-            r.raise_for_status()
-            data = r.json()
-            text = (data.get("response") or "").strip()
-            return text if text else _fallback(alert)
-    except Exception:
-        return _fallback(alert)
+    for attempt in range(2):
+        payload = {
+            "model": MODEL,
+            "prompt": prompt,
+            "stream": False,
+            "options": {"temperature": 0.4, "num_predict": 250, "top_p": 0.9},
+        }
+        try:
+            with httpx.Client(timeout=TIMEOUT) as client:
+                r = client.post(OLLAMA_URL, json=payload)
+                r.raise_for_status()
+                data = r.json()
+                text = (data.get("response") or "").strip()
+        except Exception:
+            return fallback_explanation(alert)
 
+        if not text:
+            continue
+
+        is_valid, violations = verify_explanation(text, alert)
+
+        if is_valid:
+            return text
+
+        # Regenerate with a stricter prompt
+        print(f"   [VERIFY] attempt {attempt + 1} rejected: {violations}")
+        prompt = _build_prompt(alert) + (
+            "\n\nIMPORTANT: Previous attempt contained factual errors. "
+            "Do not invent numbers. Use ONLY the evidence count provided."
+        )
+
+    # Both attempts failed verification
+    return fallback_explanation(alert)
 
 def _fallback(alert: dict) -> str:
     entity = alert.get("primary_employee_id") or alert.get("entity_id") or "entity"
