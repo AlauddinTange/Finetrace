@@ -48,6 +48,7 @@ from scripts.detectors.isolation_forest_emp import detect_iforest
 from scripts.detectors.permission_mismatch import detect_permission_mismatch
 from scripts.detectors.recon import detect_recon
 from scripts.fusion.risk_fusion import fuse
+from scripts.detectors.peer_group import detect_peer_group 
 
 print("=" * 60, flush=True)
 print("FINTRACE — Detection Pipeline", flush=True)
@@ -72,7 +73,7 @@ run_step("Circular", detect_circular, "alerts_circular.csv")
 run_step("IsolationForest", detect_iforest, "alerts_iforest.csv")
 run_step("PermissionMismatch", detect_permission_mismatch, "alerts_permission.csv")
 run_step("Recon", detect_recon, "alerts_recon.csv")
-
+run_step("PeerGroup", detect_peer_group, "alerts_peer_group.csv"),
 print("\n>>> RUNNING Risk Fusion ...", flush=True)
 try:
     final = fuse()

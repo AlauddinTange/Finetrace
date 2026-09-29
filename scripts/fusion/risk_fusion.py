@@ -32,6 +32,7 @@ def fuse():
         "alerts_iforest.csv",
         "alerts_permission.csv",
         "alerts_recon.csv",
+        "alerts_peer_group.csv",
     ]
     frames = []
     for f in files:
