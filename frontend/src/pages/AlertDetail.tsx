@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAlert, getTransactions, explainAlert } from '../api/endpoints';
+import { getAlert, getTransactions, explainAlert, updateCaseStatus } from '../api/endpoints';
 import { Alert, Transaction } from '../types';
 import { Header } from '../components/Header';
 import { RiskBadge } from '../components/RiskBadge';
-import { CheckCircle2, ArrowLeft, ShieldAlert, Cpu } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, ShieldAlert, Cpu, Network, TrendingUp } from 'lucide-react';
 
 export const AlertDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,6 +41,28 @@ export const AlertDetail: React.FC = () => {
       .finally(() => setLlmLoading(false));
   }, [alert]);
 
+  const handleDismiss = async () => {
+    try {
+      if (!alert) return;
+      await updateCaseStatus(alert.id, { status: 'FALSE_POSITIVE' });
+      navigate('/alerts');
+    } catch (err) {
+      alert('Failed to dismiss alert.');
+    }
+  };
+
+ const handleEscalate = () => {
+    if (!alert) return;
+    // Navigate to senior review and assignment page
+    navigate(`/alerts/${alert.id}/escalate`);
+  };
+
+  const handleInvestigateFlow = () => {
+    if (!alert) return;
+    // Navigate to the deep forensic evidence vault page containing all 10 raw database tables
+    navigate(`/alerts/${alert.id}/forensic`);
+  };
+
   if (loading) return <div className="min-h-screen bg-bg-primary flex items-center justify-center text-text-secondary">Loading alert investigation...</div>;
   if (error || !alert) return <div className="min-h-screen bg-bg-primary flex items-center justify-center text-accent-red">{error || 'Alert not found'}</div>;
 
@@ -59,11 +81,11 @@ export const AlertDetail: React.FC = () => {
     <div className="min-h-screen bg-bg-primary flex flex-col">
       <Header />
       <main className="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
-        <button onClick={() => navigate('/alerts')} className="flex items-center gap-2 text-xs text-text-secondary hover:text-text-primary transition-colors">
+        <button onClick={() => navigate('/alerts')} className="flex items-center gap-2 text-xs text-text-secondary hover:text-text-primary transition-colors cursor-pointer">
           <ArrowLeft size={14} /> Back to Alerts
         </button>
 
-        <div className="bg-bg-card border border-border rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-bg-card border border-border rounded-xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-md">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="font-mono text-xs text-text-muted">{alert.alert_code}</span>
@@ -75,20 +97,29 @@ export const AlertDetail: React.FC = () => {
             <h1 className="text-xl font-bold text-text-primary">{alert.title}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <button className="px-4 py-2 bg-bg-elevated border border-border hover:border-accent-cyan text-text-primary text-xs font-semibold rounded-lg transition-colors">
+            <button
+              onClick={handleDismiss}
+              className="px-4 py-2 bg-bg-elevated border border-border hover:border-accent-red text-text-primary text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+            >
               DISMISS
             </button>
-            <button className="px-4 py-2 bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-xs font-semibold rounded-lg transition-colors">
+            <button
+              onClick={handleEscalate}
+              className="px-4 py-2 bg-accent-amber/20 border border-accent-amber/40 text-accent-amber text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+            >
               ESCALATE
             </button>
-            <button className="px-4 py-2 bg-accent-cyan text-bg-primary text-xs font-semibold rounded-lg transition-colors shadow-[0_0_12px_rgba(74,222,222,0.2)]">
-              INVESTIGATE
+            <button
+              onClick={handleInvestigateFlow}
+              className="px-4 py-2 bg-accent-cyan text-bg-primary text-xs font-semibold rounded-lg transition-colors shadow-[0_0_12px_rgba(74,222,222,0.2)] cursor-pointer flex items-center gap-1.5"
+            >
+              <TrendingUp size={14} /> INVESTIGATE
             </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-bg-card border border-border rounded-xl p-6 space-y-4">
+          <div className="bg-bg-card border border-border rounded-xl p-6 space-y-4 shadow-sm">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">Why Flagged</h2>
             <ul className="space-y-3">
               {displaySignals.map((signal, idx) => (
@@ -111,15 +142,19 @@ export const AlertDetail: React.FC = () => {
             )}
           </div>
 
-          <div className="bg-bg-card border border-border rounded-xl p-6 flex flex-col items-center justify-center text-center">
+          <div
+            onClick={handleInvestigateFlow}
+            className="bg-bg-card border border-border hover:border-accent-cyan rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all shadow-sm group"
+          >
             <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary mb-4 self-start">Entity Network Preview</h2>
-            <div className="p-4 bg-bg-elevated border border-border rounded-lg text-text-muted flex flex-col items-center justify-center w-full h-40">
-              <ShieldAlert className="text-accent-cyan mb-2" size={28} />
-              <span className="text-xs">1-Hop Graph Relationship Node Preview</span>
+            <div className="p-4 bg-bg-elevated border border-border group-hover:border-accent-cyan/50 rounded-lg text-text-muted flex flex-col items-center justify-center w-full h-40 transition-colors">
+              <Network className="text-accent-cyan mb-2 group-hover:scale-110 transition-transform" size={32} />
+              <span className="text-xs font-medium text-text-primary">Launch Forensic Vault & Tables</span>
+              <span className="text-[10px] text-text-muted mt-1">Click to inspect 10 core raw data tables</span>
             </div>
           </div>
 
-          <div className="bg-bg-card border border-border rounded-xl p-6 space-y-3">
+          <div className="bg-bg-card border border-border rounded-xl p-6 space-y-3 shadow-sm">
             <div className="flex items-center gap-2 text-accent-cyan">
               <Cpu size={16} />
               <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">LLM Investigation Summary</h2>
@@ -153,25 +188,28 @@ export const AlertDetail: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-bg-card border border-border rounded-xl p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary mb-4">Evidence & Transactions</h2>
+        <div className="bg-bg-card border border-border rounded-xl p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">Evidence & Transaction Money Flow Chain</h2>
+            <span className="text-xs text-accent-cyan font-mono">Linked Records</span>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-text-primary">
               <thead className="border-b border-border text-xs uppercase tracking-wider text-text-muted">
                 <tr>
                   <th className="pb-3">Transaction ID</th>
-                  <th className="pb-3">Sender</th>
-                  <th className="pb-3">Receiver</th>
+                  <th className="pb-3">Sender Account</th>
+                  <th className="pb-3">Receiver Account</th>
                   <th className="pb-3">Amount</th>
                   <th className="pb-3">Timestamp</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {transactions.slice(0, 5).map((tx) => (
-                  <tr key={tx.id} className="hover:bg-bg-elevated transition-colors">
+                {transactions.slice(0, 6).map((tx) => (
+                  <tr key={tx.id || tx.transaction_id} className="hover:bg-bg-elevated transition-colors">
                     <td className="py-3 font-mono text-xs text-text-muted">{tx.transaction_id}</td>
-                    <td className="py-3">{tx.sender_account}</td>
-                    <td className="py-3">{tx.receiver_account}</td>
+                    <td className="py-3 font-mono text-xs text-text-primary">{tx.sender_account}</td>
+                    <td className="py-3 font-mono text-xs text-text-primary">{tx.receiver_account}</td>
                     <td className="py-3 font-semibold text-accent-cyan">₹{tx.amount?.toLocaleString()}</td>
                     <td className="py-3 text-xs text-text-secondary">{new Date(tx.timestamp).toLocaleString()}</td>
                   </tr>
