@@ -47,7 +47,7 @@ data is used at any point.
 | ML | scikit-learn (Isolation Forest) |
 | Graph | NetworkX |
 | Frontend | React 18 · TypeScript · Tailwind CSS · Recharts · ReactFlow |
-| LLM | RAG-grounded explanations (Ollama- Qwen2.5-coder:7b supported />compatible) |
+| LLM | RAG-grounded explanations (Ollama- Qwen2.5-coder:7b compatible) |
 
 ---
 
