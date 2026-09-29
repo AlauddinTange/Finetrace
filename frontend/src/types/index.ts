@@ -3,7 +3,7 @@ export type AlertStatus = 'NEW' | 'INVESTIGATING' | 'ESCALATED' | 'CLOSED' | 'FA
 export type CaseStatus = 'NEW' | 'INVESTIGATING' | 'ESCALATED' | 'CLOSED' | 'FALSE_POSITIVE';
 
 export interface Alert {
-  id: string;
+  id: number;
   alert_code: string;
   alert_type: string;
   severity: Severity;
@@ -11,12 +11,15 @@ export interface Alert {
   risk_level: string;
   title: string;
   summary: string;
-  status: AlertStatus;
-  primary_transaction_id?: string;
-  primary_employee_id?: string;
-  primary_customer_id?: string;
-  created_at: string;
+  counterfactual?: string;
+  evidence_ids?: string;
+  signal_count?: number;
   signals?: string[];
+  status: AlertStatus;
+  primary_transaction_id: string | null;
+  primary_employee_id: string | null;
+  primary_customer_id: string | null;
+  created_at: string;
   llm_explanation?: string;
 }
 

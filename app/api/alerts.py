@@ -74,3 +74,25 @@ def get_alert(alert_id: str):
         if code == alert_id or str(i + 1) == alert_id:
             return _row_to_alert(row, i)
     raise HTTPException(status_code=404, detail="Alert not found")
+
+
+@router.post("/{alert_id}/explain")
+def explain_alert(alert_id: str):
+    from app.services.llm_service import generate_explanation
+
+    df = _load()
+    if df.empty:
+        raise HTTPException(status_code=404, detail="No alerts available")
+
+    target = None
+    for i, row in df.iterrows():
+        code = str(row.get("alert_id", ""))
+        if code == alert_id or str(i + 1) == alert_id:
+            target = _row_to_alert(row, i)
+            break
+
+    if not target:
+        raise HTTPException(status_code=404, detail="Alert not found")
+
+    explanation = generate_explanation(target)
+    return {"alert_id": target["alert_code"], "explanation": explanation}
