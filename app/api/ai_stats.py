@@ -6,20 +6,32 @@ router = APIRouter()
 
 ROOT = Path(__file__).resolve().parents[2]
 BENCHMARK = ROOT / "data" / "generated" / "benchmark.json"
+MODEL_METRICS = ROOT / "data" / "generated" / "model_metrics.json"
+
+
+def _read_json(path):
+    if not path.exists():
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
 
 
 @router.get("/")
 def get_ai_stats():
-    bench = {}
-    if BENCHMARK.exists():
-        try:
-            with open(BENCHMARK, "r", encoding="utf-8") as f:
-                bench = json.load(f)
-        except Exception:
-            bench = {}
+    bench = _read_json(BENCHMARK)
+    model = _read_json(MODEL_METRICS)
 
     return {
         "models": [
+            {
+                "name": "Random Forest Classifier",
+                "type": "Supervised ML",
+                "purpose": "Employee fraud prediction (trained)",
+                "library": "scikit-learn",
+            },
             {
                 "name": "Isolation Forest",
                 "type": "Unsupervised ML",
@@ -29,7 +41,7 @@ def get_ai_stats():
             {
                 "name": "K-Means Peer Clustering",
                 "type": "Unsupervised ML",
-                "purpose": "Peer-group deviation detection (3σ threshold)",
+                "purpose": "Peer-group deviation detection (3σ)",
                 "library": "custom numpy implementation",
             },
             {
@@ -55,4 +67,5 @@ def get_ai_stats():
         ],
         "benchmark": bench.get("metrics", {}),
         "ground_truth_total": bench.get("ground_truth_total", 0),
+        "trained_model": model,
     }
