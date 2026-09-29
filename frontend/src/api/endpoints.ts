@@ -1,96 +1,66 @@
 import { apiClient } from './client';
-import type {
-  Alert,
-  Case,
-  Customer,
-  DashboardStats,
-  Employee,
-  Transaction,
-  Investigation,
-} from '../types';
+import { Alert, Case, Customer, DashboardStats, Employee, Transaction, Investigation } from '../types';
 
-export interface LoginResponse {
-  access_token: string;
-  token_type: string;
-}
-
-/* ── Auth ── */
-export const login = async (
-  username: string,
-  password: string,
-): Promise<LoginResponse> => {
-  const form = new URLSearchParams();
-  form.append('username', username);
-  form.append('password', password);
-
-  const res = await apiClient.post<LoginResponse>('/api/v1/auth/login', form, {
+export const login = async (username: string, password: string): Promise<{ access_token: string; token_type: string }> => {
+  const formData = new URLSearchParams();
+  formData.append('username', username);
+  formData.append('password', password);
+  const response = await apiClient.post('/api/v1/auth/login', formData, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
-  return res.data;
+  return response.data;
 };
 
-/* ── Dashboard ── */
 export const getDashboard = async (): Promise<DashboardStats> => {
-  const res = await apiClient.get<DashboardStats>('/api/v1/dashboard/');
-  return res.data;
+  const response = await apiClient.get('/api/v1/dashboard/');
+  return response.data;
 };
 
-/* ── Alerts ── */
 export const getAlerts = async (): Promise<Alert[]> => {
-  const res = await apiClient.get<Alert[]>('/api/v1/alerts/');
-  return res.data;
+  const response = await apiClient.get('/api/v1/alerts/');
+  return response.data;
 };
 
-export const getAlert = async (id: string | number): Promise<Alert> => {
-  const res = await apiClient.get<Alert>(`/api/v1/alerts/${id}`);
-  return res.data;
+export const getAlert = async (id: string): Promise<Alert> => {
+  const response = await apiClient.get(`/api/v1/alerts/${id}`);
+  return response.data;
 };
 
-/* ── Cases ── */
 export const getCases = async (): Promise<Case[]> => {
-  const res = await apiClient.get<Case[]>('/api/v1/cases/');
-  return res.data;
+  const response = await apiClient.get('/api/v1/cases/');
+  return response.data;
 };
 
-export const updateCase = async (
-  id: string | number,
-  data: Partial<Pick<Case, 'status' | 'assigned_to'>>,
-): Promise<Case> => {
-  const res = await apiClient.patch<Case>(`/api/v1/cases/${id}`, data);
-  return res.data;
+export const updateCaseStatus = async (id: string, status: string): Promise<Case> => {
+  const response = await apiClient.patch(`/api/v1/cases/${id}`, { status });
+  return response.data;
 };
 
-/* ── Employees ── */
 export const getEmployees = async (): Promise<Employee[]> => {
-  const res = await apiClient.get<Employee[]>('/api/v1/employees/');
-  return res.data;
+  const response = await apiClient.get('/api/v1/employees/');
+  return response.data;
 };
 
-/* ── Customers ── */
-export const getCustomers = async (): Promise<Customer[]> => {
-  const res = await apiClient.get<Customer[]>('/api/v1/customers/');
-  return res.data;
-};
-
-/* ── Transactions ── */
 export const getTransactions = async (): Promise<Transaction[]> => {
-  const res = await apiClient.get<Transaction[]>('/api/v1/transactions/');
-  return res.data;
+  const response = await apiClient.get('/api/v1/transactions/');
+  return response.data;
 };
 
-/* ── Investigations ── */
+export const getCustomers = async (): Promise<Customer[]> => {
+  const response = await apiClient.get('/api/v1/customers/');
+  return response.data;
+};
+
 export const getInvestigations = async (): Promise<Investigation[]> => {
-  const res = await apiClient.get<Investigation[]>('/api/v1/investigations/');
-  return res.data;
+  const response = await apiClient.get('/api/v1/investigations/');
+  return response.data;
 };
 
-export const updateCaseStatus = updateCase;
-
-export const explainAlert = async (
-  id: string | number,
-): Promise<{ alert_id: string; explanation: string; verified: boolean }> => {
-  const res = await apiClient.post<{ alert_id: string; explanation: string; verified: boolean }>(
-    `/api/v1/alerts/${id}/explain`,
-  );
-  return res.data;
+export const register = async (username: string, email: string, password: string): Promise<any> => {
+  const response = await apiClient.post('/api/v1/auth/register', {
+    username,
+    email,
+    password,
+  });
+  return response.data;
 };

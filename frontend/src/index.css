@@ -1,28 +1,28 @@
-@import url('[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  background-color: #0B0E14;
-  color: #E6E9EF;
+  background-color: #F8FAFC;
+  color: #0F172A;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom clean scrollbar for light theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0E14;
+  background: #F8FAFC;
 }
 ::-webkit-scrollbar-thumb {
-  background: #232838;
+  background: #CBD5E1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4F5568;
+  background: #94A3B8;
 }

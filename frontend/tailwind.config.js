@@ -8,23 +8,23 @@ export default {
     extend: {
       colors: {
         bg: {
-          primary: '#0B0E14',
-          card: '#131721',
-          elevated: '#1A1F2E',
+          primary: '#0F111A', // Rich Deep Midnight
+          card: '#161923',    // Elevated Card Surface
+          elevated: '#1E2230',// Interactive Hover/Element
         },
         border: {
-          DEFAULT: '#232838',
+          DEFAULT: '#2A2F42', // Crisp Muted Border
         },
         accent: {
-          green: '#00E5A0',
-          cyan: '#4ADEDE',
-          amber: '#F5A623',
-          red: '#FF4D6D',
+          green: '#10B981',   // Success Emerald
+          cyan: '#6366F1',    // Electric Indigo / Violet
+          amber: '#F59E0B',   // Warning Amber
+          red: '#EF4444',     // Critical Red
         },
         text: {
-          primary: '#E6E9EF',
-          secondary: '#8B92A6',
-          muted: '#4F5568',
+          primary: '#F3F4F6', // High-contrast White
+          secondary: '#9CA3AF',// Muted Gray
+          muted: '#6B7280',   // Deep Placeholder Gray
         },
       },
       fontFamily: {
