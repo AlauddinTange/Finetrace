@@ -47,7 +47,7 @@ data is used at any point.
 | ML | scikit-learn (Isolation Forest) |
 | Graph | NetworkX |
 | Frontend | React 18 · TypeScript · Tailwind CSS · Recharts · ReactFlow |
-| LLM | RAG-grounded explanations (Ollama-compatible) |
+| LLM | RAG-grounded explanations (Ollama- Qwen2.5-coder:7b compatible) |
 
 ---
 
@@ -166,8 +166,7 @@ repository.
 
 Reason: the synthetic dataset is large (~250 MB across 10 CSVs) and would
 exceed GitHub's per-file and total-repo soft limits, slow down cloning, and
-trip the platform's large-file warnings. The rules for this hackathon also
-explicitly discourage committing large data files and binaries.
+trip the platform's large-file warnings. 
 
 All data is 100% reproducible. Every CSV is generated deterministically
 by the scripts in scripts/generators/ with a fixed random seed (SEED=42).
